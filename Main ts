@@ -1,22 +1,15 @@
-# App-neige
-Denaigement
-deneigement-v1/
-├─ src/
-│  ├─ main.ts
-│  ├─ router.ts
-│  ├─ store/
-│  │  └─ useAppStore.ts
-│  ├─ services/
-│  │  ├─ firebase.ts
-│  │  ├─ auth.ts
-│  │  ├─ geo.ts
-│  │  └─ api.ts
-│  ├─ pages/
-│  │  ├─ DriverRunPage.vue        # Conducteur: démarrer/terminer tournée + upload photo
-│  │  ├─ ClientMapPage.vue        # Client: voir position du camion + ETA
-│  │  └─ AdminDashboardPage.vue   # Admin: liste, statut, preuves de passage
-│  ├─ components/
-│  │  ├─ JobCard.vue
-│  │  └─ StatusChip.vue
-│  └─ theme/variables.css
-└─ capacitor.config.ts
+import { createApp } from 'vue'
+import { IonicVue } from '@ionic/vue'
+import { createPinia } from 'pinia'
+import router from './router'
+import App from './App.vue'
+
+import '@ionic/vue/css/core.css'
+import '@ionic/vue/css/normalize.css'
+import '@ionic/vue/css/structure.css'
+import '@ionic/vue/css/typography.css'
+import './theme/variables.css'
+
+const app = createApp(App)
+app.use(IonicVue).use(createPinia()).use(router)
+router.isReady().then(() => app.mount('#app'))
