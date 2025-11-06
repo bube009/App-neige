@@ -1,1 +1,36 @@
+import { db } from './firebase'
+import {
+  doc, setDoc, updateDoc, serverTimestamp, collection, addDoc
+} from 'firebase/firestore'
 
+export async function startRun(driverId: string) {
+  const runRef = doc(collection(db, 'runs')) // auto-id
+  await setDoc(runRef, {
+    driverId, startedAt: serverTimestamp(), status: 'running'
+  })
+  return runRef.id
+}
+
+export async function pushDriverLocation(runId: string, loc: {lat:number, lng:number}) {
+  await updateDoc(doc(db, 'runs', runId), {
+    lastLoc: loc, lastPingAt: serverTimestamp()
+  })
+}
+
+export async function finishRun(runId: string) {
+  await updateDoc(doc(db, 'runs', runId), {
+    finishedAt: serverTimestamp(), status: 'done'
+  })
+}
+
+export async function markJobDone(jobId: string, proofUrl?: string) {
+  await updateDoc(doc(db, 'jobs', jobId), {
+    status: 'done', proofUrl: proofUrl || null, closedAt: serverTimestamp()
+  })
+}
+
+export async function logEvent(runId: string, type: string, payload?: any) {
+  await addDoc(collection(db, 'runs', runId, 'events'), {
+    type, payload: payload || null, at: serverTimestamp()
+  })
+}
